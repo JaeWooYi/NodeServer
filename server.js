@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const port = 8070;
+const models = require("./models");
 
 app.use(express.json());
 app.use(cors());
@@ -52,4 +53,14 @@ app.get("/products/:id/events/:eventID", (req, res) => {
 
 app.listen(port, () => {
   console.log("GrapMall Server Startig!");
+  models.sequelize
+    .sync()
+    .then(() => {
+      console.log("DB Connect Success !@!@");
+    })
+    .catch(err => {
+      console.error(err);
+      console.log("DB Connect Failed....");
+      process.exit();
+    });
 });
