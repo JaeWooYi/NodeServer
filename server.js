@@ -38,15 +38,16 @@ app.get("/products", async (req, res) => {
 
 app.post("/products", (req, res) => {
   const body = req.body;
-  const { name, description, price, seller } = body;
-  if (!name || !description || !price || !seller) {
-    res.send("Input Every Field.");
+  const { name, description, price, seller, imageUrl } = body;
+  if (!name || !description || !price || !seller || !imageUrl) {
+    res.status(400).send("Input Every Field.");
   }
   models.Product.create({
     name,
     description,
     price,
     seller,
+    imageUrl,
   })
     .then(result => {
       console.log("Product Create Result : " + result);
@@ -56,7 +57,7 @@ app.post("/products", (req, res) => {
     })
     .catch(error => {
       console.log(error);
-      res.send("Product Upload Fail..");
+      res.status(400).send("Product Upload Fail..");
     });
 });
 
@@ -76,7 +77,7 @@ app.get("/products/:id", (req, res) => {
     })
     .catch(error => {
       console.error(error);
-      res.send("Error..");
+      res.status(400).send("Error..");
     });
 });
 
