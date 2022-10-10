@@ -19,6 +19,21 @@ app.use(express.json());
 app.use(cors());
 app.use("/upload", express.static("upload"));
 
+app.get("/banners", (req, res) => {
+  models.Banner.findAll({
+    limit: 3,
+  })
+    .then(result => {
+      res.send({
+        banners: result,
+      });
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).send("Error!!");
+    });
+});
+
 app.get("/products", async (req, res) => {
   models.Product.findAll({
     order: [["createdAt", "DESC"]],
