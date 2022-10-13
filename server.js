@@ -37,7 +37,15 @@ app.get("/banners", (req, res) => {
 app.get("/products", async (req, res) => {
   models.Product.findAll({
     order: [["createdAt", "DESC"]],
-    attributes: ["id", "name", "price", "createdAt", "seller", "imageUrl"],
+    attributes: [
+      "id",
+      "name",
+      "price",
+      "createdAt",
+      "seller",
+      "imageUrl",
+      "soldout",
+    ],
   })
     .then(result => {
       console.log("PRODUCTS : " + result);
@@ -102,6 +110,29 @@ app.post("/image", upload.single("image"), (req, res) => {
   res.send({
     imageUrl: file.path,
   });
+});
+
+app.post("/purchase/:id", (req, res) => {
+  const { id } = req.params;
+  models.Product.update(
+    {
+      soldout: 1,
+    },
+    {
+      where: {
+        id,
+      },
+    }
+  )
+    .then(result => {
+      res.send({
+        result: true,
+      });
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).send("ERROR!!");
+    });
 });
 
 app.listen(port, () => {
